@@ -1,0 +1,21 @@
+{
+  "users": [
+    {
+      "username": "namblue1412",
+      "password": "alalalal",
+      "role": "admin"
+    },
+    {
+      "username": "sv01",
+      "password": "1234",
+      "role": "guest",
+      "valid_until": "2026-01-31"
+    },
+    {
+      "username": "sv02",
+      "password": "abcd",
+      "role": "guest",
+      "valid_until": "2025-12-31"
+    }
+  ]
+}
