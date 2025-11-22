@@ -6,6 +6,30 @@ const shuffle = arr => { const a = arr.slice(); for (let i=a.length-1;i>0;i--){ 
 const fmtTime = s => { const m=Math.floor(s/60), ss=s%60; return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`; };
 const download = (fn, txt) => { const blob=new Blob([txt],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=fn; a.click(); setTimeout(()=>URL.revokeObjectURL(url),3000); };
 
+/* ============ Theme (sáng/tối) ============ */
+const THEME_KEY = 'ump_theme';
+
+function applyTheme(theme){
+  const t = theme === 'light' ? 'light' : 'dark';
+  document.body.setAttribute('data-theme', t);
+  localStorage.setItem(THEME_KEY, t);
+  const btn = byId('themeToggle');
+  if(btn){
+    btn.textContent = t === 'light' ? '🌙 Tối' : '☀️ Sáng';
+  }
+}
+function initTheme(){
+  const saved = localStorage.getItem(THEME_KEY);
+  applyTheme(saved || 'dark');
+  const btn = byId('themeToggle');
+  if(btn){
+    btn.addEventListener('click', ()=>{
+      const cur = document.body.getAttribute('data-theme') || 'dark';
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+  }
+}
+
 /* ============ Auth từ accounts.json ============ */
 const LS_SESSION = 'ump_quiz_session_v3';
 let accountsConfig = null; // { users: [...] }
@@ -57,13 +81,14 @@ function isGuestActive(user){
   return exp >= today;
 }
 
-function showAuthOverlay(){
-  const ov = byId('authOverlay');
-  if(ov) ov.style.display = 'flex';
+function showLogin(){
+  byId('loginScreen').classList.remove('hide');
+  byId('appShell').classList.add('hide');
 }
-function hideAuthOverlay(){
-  const ov = byId('authOverlay');
-  if(ov) ov.style.display = 'none';
+function showApp(){
+  byId('loginScreen').classList.add('hide');
+  byId('appShell').classList.remove('hide');
+  renderAuthArea();
 }
 
 function renderAuthArea(){
@@ -97,12 +122,12 @@ function renderAuthArea(){
 function canUseApp(){
   const u = currentUser();
   if(!u){
-    showAuthOverlay();
+    showLogin();
     return false;
   }
   if(u.role === 'admin') return true;
   if(u.role === 'guest' && isGuestActive(u)) return true;
-  alert('Tài khoản guest đã hết hạn hoặc chưa được cấp ngày hiệu lực. Liên hệ Admin để chỉnh accounts.json.');
+  alert('Tài khoản guest đã hết hạn hoặc chưa được cấp ngày hiệu lực. Sửa accounts.json.');
   return false;
 }
 
@@ -130,18 +155,20 @@ async function initAuth(){
         alert('Sai tài khoản hoặc mật khẩu');
         return;
       }
+      if(u.role === 'guest' && !isGuestActive(u)){
+        alert('Tài khoản guest đã hết hạn.');
+        return;
+      }
       setSession(name);
-      hideAuthOverlay();
-      renderAuthArea();
+      showApp();
     });
   }
 
   const cu = currentUser();
-  if(cu){
-    hideAuthOverlay();
-    renderAuthArea();
+  if(cu && (cu.role === 'admin' || isGuestActive(cu))){
+    showApp();
   }else{
-    showAuthOverlay();
+    showLogin();
   }
 }
 
@@ -514,6 +541,9 @@ function getTemplateJSON(){
   };
 }
 
-/* ============ Init header text & Auth ============ */
+/* ============ Init ============ */
+function setHeaderInfo(t){ byId('headerInfo').textContent=t; }
+
 setHeaderInfo('Chưa tải đề');
+initTheme();
 initAuth();
