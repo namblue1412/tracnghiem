@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <div class="wrap bar">
       <div class="grow">
@@ -17,13 +16,11 @@
       <div class="pill" id="headerInfo">Chưa tải đề</div>
       <button class="help-icon" id="btnHelp" title="Hướng dẫn" aria-label="Hướng dẫn">❓</button>
       <div class="pill">⏱ <span class="timer" id="headerTimer">00:00</span></div>
-      <!-- Khu hiển thị user + trạng thái -->
       <div id="authArea" class="auth-area"></div>
     </div>
   </header>
 
   <main class="wrap">
-    <!-- Loader -->
     <section class="card pad" id="loader">
       <div class="grid-2">
         <div>
@@ -71,9 +68,7 @@
       </div>
     </section>
 
-    <!-- Quiz two-pane -->
     <section id="quizPanel" class="two hide">
-      <!-- Left: câu hỏi + đáp án (read-only) -->
       <div class="qview">
         <div class="card pad" id="qCard">
           <div class="qtitle" id="qTitle">Câu 1</div>
@@ -85,7 +80,6 @@
         </div>
       </div>
 
-      <!-- Right: answer matrix -->
       <aside class="side">
         <div class="section">
           <div class="pad">
@@ -125,13 +119,13 @@
       </aside>
     </section>
 
-    <!-- Result list -->
+
     <section id="resultPanel" class="hide">
       <div class="card pad" id="wrongList"></div>
     </section>
   </main>
 
-  <!-- Help Modal -->
+
   <div id="helpModal" class="modal-backdrop hide" aria-hidden="true" role="dialog" aria-labelledby="helpTitle">
     <div class="modal card">
       <div class="modal-header">
@@ -166,7 +160,7 @@
     </div>
   </div>
 
-  <!-- Auth overlay: bắt buộc đăng nhập -->
+  
   <div id="authOverlay" class="auth-overlay">
     <div class="card pad auth-card">
       <h2 class="mt0">Đăng nhập</h2>
