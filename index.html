@@ -7,161 +7,8 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="header">
-    <div class="wrap bar">
-      <div class="grow">
-        <h1>Thi thử 3A/3B</h1>
-        <div class="muted"></div>
-      </div>
-      <div class="pill" id="headerInfo">Chưa tải đề</div>
-      <button class="help-icon" id="btnHelp" title="Hướng dẫn" aria-label="Hướng dẫn">❓</button>
-      <div class="pill">⏱ <span class="timer" id="headerTimer">00:00</span></div>
-      <div id="authArea" class="auth-area"></div>
-    </div>
-  </header>
 
-  <main class="wrap">
-    <section class="card pad" id="loader">
-      <div class="grid-2">
-        <div>
-          <h2 class="mt0">1) Import đề (JSON)</h2>
-          <div class="uploader">
-            <label class="btn" for="fileInput">📄 Chọn file JSON</label>
-            <input id="fileInput" type="file" accept="application/json" />
-            <div class="drop" id="drop">Kéo & thả file JSON vào đây</div>
-            <div class="muted mt6">Hoặc dán nội dung JSON:</div>
-            <textarea id="paste" placeholder='{"meta":{"title":"Dược lý – Đề 01"},"questions":[...]}'></textarea>
-            <div class="btn-row">
-              <button class="btn" id="btnParse">📥 Nạp từ vùng dán</button>
-              <button class="btn ghost" id="btnTemplate">📦 Tải template JSON</button>
-              <button class="btn ghost" id="btnSample">✨ Nạp đề mẫu</button>
-            </div>
-          </div>
-        </div>
-        <div>
-          <h2 class="mt0">2) Thiết lập</h2>
-          <label>Thời gian (phút) — để trống để lấy từ file
-            <input type="number" id="minutes" min="1" step="1" placeholder="VD: 15" />
-          </label>
-          <div class="grid-2 mt8">
-            <label>Trộn thứ tự câu hỏi
-              <select id="shuffleQ">
-                <option value="file">Theo file</option>
-                <option value="yes">Luôn trộn</option>
-                <option value="no">Không trộn</option>
-              </select>
-            </label>
-            <label>Trộn thứ tự đáp án
-              <select id="shuffleO">
-                <option value="file">Theo file</option>
-                <option value="yes">Luôn trộn</option>
-                <option value="no">Không trộn</option>
-              </select>
-            </label>
-          </div>
-          <div class="muted mt8">Format JSON cố định ở popup <b>❓ Hướng dẫn</b>.</div>
-          <div class="btn-row mt10">
-            <button class="btn" id="btnStart" disabled>🚀 Bắt đầu làm bài</button>
-            <button class="btn ghost" id="btnReset" disabled>↺ Làm lại / đổi đề</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="quizPanel" class="two hide">
-      <div class="qview">
-        <div class="card pad" id="qCard">
-          <div class="qtitle" id="qTitle">Câu 1</div>
-          <div class="muted" id="qMeta">—</div>
-          <div class="qtext mt8" id="qText"></div>
-          <div id="qImage" class="mt8 mb2"></div>
-          <div class="opts mt8" id="qOpts"></div>
-          <div class="exp" id="qExp"></div>
-        </div>
-      </div>
-
-      <aside class="side">
-        <div class="section">
-          <div class="pad">
-            <div class="bar spaced">
-              <div class="pill">⏱ <span class="timer" id="bigTimer">00:00</span></div>
-              <div class="pill hide" id="scorePill">Điểm: 0/0 (0%)</div>
-            </div>
-            <div id="sideMeta" class="muted">0/0 câu</div>
-            <div class="progress" aria-label="Tiến độ"><span id="bar"></span></div>
-            <div class="chips" id="filterGroup">
-              <button class="chip active" data-filter="all">Tất cả</button>
-              <button class="chip" data-filter="answered">Đã làm</button>
-              <button class="chip" data-filter="unanswered">Chưa làm</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="section">
-          <div class="pad space-between">
-            <b>Danh sách câu & chọn nhanh</b>
-            <div class="legend"><span>Single: tròn</span><span>Multi: vuông</span></div>
-          </div>
-          <div class="matrix" id="qMatrix"></div>
-        </div>
-
-        <div class="section">
-          <div class="pad btn-row">
-            <button class="btn" id="btnPrev">← Trước</button>
-            <button class="btn" id="btnNext">Tiếp →</button>
-            <button class="btn" id="btnSubmit">📤 Nộp bài</button>
-            <button class="btn" id="btnReview">🔍 Xem/ẩn giải thích</button>
-            <button class="btn" id="btnShuffle">🔀 Xáo lại</button>
-            <button class="btn" id="btnRedo">↺ Làm lại đề</button>
-            <button class="btn" id="btnNew">📥 Làm đề mới</button>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-
-    <section id="resultPanel" class="hide">
-      <div class="card pad" id="wrongList"></div>
-    </section>
-  </main>
-
-
-  <div id="helpModal" class="modal-backdrop hide" aria-hidden="true" role="dialog" aria-labelledby="helpTitle">
-    <div class="modal card">
-      <div class="modal-header">
-        <b id="helpTitle">Hướng dẫn sử dụng & câu lệnh mẫu</b>
-        <button class="btn ghost" id="helpClose">✖</button>
-      </div>
-      <div class="modal-body">
-        <p class="muted">Dùng các mẫu lệnh dưới đây để mình tạo/chuẩn hoá đề theo <b>TEMPLATE JSON cố định</b>.</p>
-        <h3>1) TEMPLATE JSON</h3>
-        <pre>{
-  "meta": {"title":"TÊN ĐỀ","time_limit_sec":900,"shuffle_questions":true,
-           "shuffle_options":true,"pass_mark":0.5,"version":"1.0"},
-  "questions":[{"id":"DL001","type":"single","question":"...","options":["A","B","C","D"],
-                "correct":[0],"explanation":"...","tags":["..."],"difficulty":"easy","image":null}]
-}</pre>
-        <h3>2) Câu lệnh nhanh</h3>
-        <pre>Hãy tạo file JSON theo TEMPLATE:
-- Môn: Dược lý – Hệ giao cảm, kháng cholinergic
-- Số câu: 50 (35 single, 15 multi)
-- Độ khó: 50% easy, 40% medium, 10% hard
-- time_limit_sec=2400, shuffle_questions=true, shuffle_options=true, pass_mark=0.6
-- id DL001…DL050; mỗi câu có explanation ngắn; chỉ trả JSON hợp lệ.</pre>
-        <pre>Tôi gửi danh sách Q/A (A/B/C/D + đáp án đúng). Hãy CHUYỂN thành JSON TEMPLATE.
-- Single nếu 1 đáp án đúng; Multi nếu >1
-- Giữ nguyên câu hỏi/đáp án, explanation ngắn
-- id DL001…; difficulty=medium nếu không suy ra</pre>
-        <pre>Tạo đề LUYỆN SAI từ JSON cũ với ids: [DL002, DL015, DL021,…]
-- Giữ nội dung, đảo thứ tự đáp án
-- title = "Luyện sai – [tên cũ]"; shuffle_options=true</pre>
-        <p class="muted">Lưu JSON thành <code>.json</code> rồi import bằng <b>Chọn file JSON</b> hoặc dán vào vùng paste.</p>
-      </div>
-    </div>
-  </div>
-
-  
-  <div id="authOverlay" class="auth-overlay">
+  <div id="loginScreen" class="login-screen">
     <div class="card pad auth-card">
       <h2 class="mt0">Đăng nhập</h2>
       <p class="muted">
@@ -179,6 +26,170 @@
           <button type="button" id="btnLogin" class="btn">Đăng nhập</button>
         </div>
       </form>
+    </div>
+  </div>
+
+
+  <div id="appShell" class="hide">
+
+    <header class="header">
+      <div class="wrap bar">
+        <div class="grow">
+          <h1>Thi thử 3A/3B</h1>
+          <div class="muted"></div>
+        </div>
+        <div class="pill" id="headerInfo">Chưa tải đề</div>
+        <button class="help-icon" id="btnHelp" title="Hướng dẫn" aria-label="Hướng dẫn">❓</button>
+        <div class="pill">⏱ <span class="timer" id="headerTimer">00:00</span></div>
+       
+        <button class="btn small ghost" id="themeToggle" title="Chuyển giao diện">🌙 Tối</button>
+        
+        <div id="authArea" class="auth-area"></div>
+      </div>
+    </header>
+
+    <main class="wrap">
+     
+      <section class="card pad" id="loader">
+        <div class="grid-2">
+          <div>
+            <h2 class="mt0">1) Import đề (JSON)</h2>
+            <div class="uploader">
+              <label class="btn" for="fileInput">📄 Chọn file JSON</label>
+              <input id="fileInput" type="file" accept="application/json" />
+              <div class="drop" id="drop">Kéo & thả file JSON vào đây</div>
+              <div class="muted mt6">Hoặc dán nội dung JSON:</div>
+              <textarea id="paste" placeholder='{"meta":{"title":"Dược lý – Đề 01"},"questions":[...]}'></textarea>
+              <div class="btn-row">
+                <button class="btn" id="btnParse">📥 Nạp từ vùng dán</button>
+                <button class="btn ghost" id="btnTemplate">📦 Tải template JSON</button>
+                <button class="btn ghost" id="btnSample">✨ Nạp đề mẫu</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2 class="mt0">2) Thiết lập</h2>
+            <label>Thời gian (phút) — để trống để lấy từ file
+              <input type="number" id="minutes" min="1" step="1" placeholder="VD: 15" />
+            </label>
+            <div class="grid-2 mt8">
+              <label>Trộn thứ tự câu hỏi
+                <select id="shuffleQ">
+                  <option value="file">Theo file</option>
+                  <option value="yes">Luôn trộn</option>
+                  <option value="no">Không trộn</option>
+                </select>
+              </label>
+              <label>Trộn thứ tự đáp án
+                <select id="shuffleO">
+                  <option value="file">Theo file</option>
+                  <option value="yes">Luôn trộn</option>
+                  <option value="no">Không trộn</option>
+                </select>
+              </label>
+            </div>
+            <div class="muted mt8">Format JSON cố định ở popup <b>❓ Hướng dẫn</b>.</div>
+            <div class="btn-row mt10">
+              <button class="btn" id="btnStart" disabled>🚀 Bắt đầu làm bài</button>
+              <button class="btn ghost" id="btnReset" disabled>↺ Làm lại / đổi đề</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+     
+      <section id="quizPanel" class="two hide">
+       
+        <div class="qview">
+          <div class="card pad" id="qCard">
+            <div class="qtitle" id="qTitle">Câu 1</div>
+            <div class="muted" id="qMeta">—</div>
+            <div class="qtext mt8" id="qText"></div>
+            <div id="qImage" class="mt8 mb2"></div>
+            <div class="opts mt8" id="qOpts"></div>
+            <div class="exp" id="qExp"></div>
+          </div>
+        </div>
+
+       
+        <aside class="side">
+          <div class="section">
+            <div class="pad">
+              <div class="bar spaced">
+                <div class="pill">⏱ <span class="timer" id="bigTimer">00:00</span></div>
+                <div class="pill hide" id="scorePill">Điểm: 0/0 (0%)</div>
+              </div>
+              <div id="sideMeta" class="muted">0/0 câu</div>
+              <div class="progress" aria-label="Tiến độ"><span id="bar"></span></div>
+              <div class="chips" id="filterGroup">
+                <button class="chip active" data-filter="all">Tất cả</button>
+                <button class="chip" data-filter="answered">Đã làm</button>
+                <button class="chip" data-filter="unanswered">Chưa làm</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="pad space-between">
+              <b>Danh sách câu & chọn nhanh</b>
+              <div class="legend"><span>Single: tròn</span><span>Multi: vuông</span></div>
+            </div>
+            <div class="matrix" id="qMatrix"></div>
+          </div>
+
+          <div class="section">
+            <div class="pad btn-row">
+              <button class="btn" id="btnPrev">← Trước</button>
+              <button class="btn" id="btnNext">Tiếp →</button>
+              <button class="btn" id="btnSubmit">📤 Nộp bài</button>
+              <button class="btn" id="btnReview">🔍 Xem/ẩn giải thích</button>
+              <button class="btn" id="btnShuffle">🔀 Xáo lại</button>
+              <button class="btn" id="btnRedo">↺ Làm lại đề</button>
+              <button class="btn" id="btnNew">📥 Làm đề mới</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      
+      <section id="resultPanel" class="hide">
+        <div class="card pad" id="wrongList"></div>
+      </section>
+    </main>
+
+   
+    <div id="helpModal" class="modal-backdrop hide" aria-hidden="true" role="dialog" aria-labelledby="helpTitle">
+      <div class="modal card">
+        <div class="modal-header">
+          <b id="helpTitle">Hướng dẫn sử dụng & câu lệnh mẫu</b>
+          <button class="btn ghost" id="helpClose">✖</button>
+        </div>
+        <div class="modal-body">
+          <p class="muted">Dùng các mẫu lệnh dưới đây để mình tạo/chuẩn hoá đề theo <b>TEMPLATE JSON cố định</b>.</p>
+          <h3>1) TEMPLATE JSON</h3>
+          <pre>{
+  "meta": {"title":"TÊN ĐỀ","time_limit_sec":900,"shuffle_questions":true,
+           "shuffle_options":true,"pass_mark":0.5,"version":"1.0"},
+  "questions":[{"id":"DL001","type":"single","question":"...","options":["A","B","C","D"],
+                "correct":[0],"explanation":"...","tags":["..."],"difficulty":"easy","image":null}]
+}</pre>
+          <h3>2) Câu lệnh nhanh</h3>
+          <pre>Hãy tạo file JSON theo TEMPLATE:
+- Môn: Dược lý – Hệ giao cảm, kháng cholinergic
+- Số câu: 50 (35 single, 15 multi)
+- Độ khó: 50% easy, 40% medium, 10% hard
+- time_limit_sec=2400, shuffle_questions=true, shuffle_options=true, pass_mark=0.6
+- id DL001…DL050; mỗi câu có explanation ngắn; chỉ trả JSON hợp lệ.</pre>
+          <pre>Tôi gửi danh sách Q/A (A/B/C/D + đáp án đúng). Hãy CHUYỂN thành JSON TEMPLATE.
+- Single nếu 1 đáp án đúng; Multi nếu >1
+- Giữ nguyên câu hỏi/đáp án, explanation ngắn
+- id DL001…; difficulty=medium nếu không suy ra</pre>
+          <pre>Tạo đề LUYỆN SAI từ JSON cũ với ids: [DL002, DL015, DL021,…]
+- Giữ nội dung, đảo thứ tự đáp án
+- title = "Luyện sai – [tên cũ]"; shuffle_options=true</pre>
+          <p class="muted">Lưu JSON thành <code>.json</code> rồi import bằng <b>Chọn file JSON</b> hoặc dán vào vùng paste.</p>
+        </div>
+      </div>
     </div>
   </div>
 
